@@ -23,7 +23,20 @@
 | `pyproject.toml` | 发布者 ID 改为本分支的发布者，其余节点与协议未变。 |
 
 > [!IMPORTANT]
-> 本分支**不包含**针对 ComfyUI 前端 1.55.x / 1.56.x 的兼容补丁。在这些版本下，绘制被提升到子图宿主卡上的 `IMAGEUPLOAD` 控件会抛 `TypeError` 并冻结画布——这是官方回归，已在 frontend 1.57.1 修复（[ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)）。请升级前端，或使用 1.53.x / 1.54.x 与 1.57.1 及以上。
+> **画布冻结不是本分支能修的问题，它源于官方前端回归。** 在 frontend 1.55.x / 1.56.x 下，只要画布绘制到「被子图宿主提升的 `IMAGEUPLOAD` 控件」（核心 `Load Image` 的「选择文件上传」按钮），就会抛出 `TypeError: Cannot set property options of #<Object> which has only a getter`，整帧渲染中断，画布从此不再重绘——表现是「画面定格、小地图还能拖」。根因在官方 `ButtonWidget` 构造函数向只读的控件投影写入 `options`，与任何第三方节点无关，官方已在 frontend 1.57.1 修复（[ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)）。本分支不对此打补丁。
+
+### ✅ 已验证版本
+
+整合包界面显示的通常是 **ComfyUI 版本（`0.XX`）**；对应的前端包版本可从 ComfyUI 根目录的 `requirements.txt`（`comfyui-frontend-package==`）或浏览器控制台报错里的 JS 路径确认。
+
+| ComfyUI | 前端包 | 结果 |
+|---|---|---|
+| 0.36 – 0.39 | 1.52.7 – 1.53.10 | ✅ 正常 |
+| 0.40 – 0.41 | 1.55.17 | ❌ 画布冻结 |
+| 0.42.5 | 1.55.18 | ❌ 画布冻结 |
+| master 及后续版本 | 1.57.1 及以上 | ✅ 官方已修复 |
+
+> 表中区间为实测点与官方 issue 记录的合并结论；落在区间内的具体小版本未逐一验证。若你的版本不在表内，先看 `requirements.txt` 里的前端版本落在哪一段。
 
 > 当前为已发布的预览版。首次稳定发布前，工作流格式和节点行为仍可能调整。旧版工作流不会自动迁移；词库管理可以导入下文列出的受支持旧版词库导出文件。
 

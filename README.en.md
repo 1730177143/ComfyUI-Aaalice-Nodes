@@ -23,7 +23,20 @@ Compact parameter controls and workflow utilities for ComfyUI.
 | `pyproject.toml` | Publisher ID now belongs to this fork; nodes and protocols are unchanged. |
 
 > [!IMPORTANT]
-> This fork does **not** ship a compatibility patch for ComfyUI frontend 1.55.x / 1.56.x. On those versions, drawing an `IMAGEUPLOAD` widget promoted onto a subgraph host card throws a `TypeError` and freezes the canvas. That is an upstream regression, fixed in frontend 1.57.1 ([ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)). Upgrade the frontend, or stay on 1.53.x / 1.54.x and 1.57.1 or newer.
+> **The canvas freeze is not something this fork can fix — it is an upstream frontend regression.** On frontend 1.55.x / 1.56.x, drawing an `IMAGEUPLOAD` widget that a subgraph host has promoted onto its card (the core `Load Image` "choose file to upload" button) throws `TypeError: Cannot set property options of #<Object> which has only a getter`. The frame aborts, the canvas never repaints again, and it presents as "the image is frozen but the minimap still moves". The root cause is the official `ButtonWidget` constructor writing `options` onto a read-only widget projection; no third-party node is involved. Fixed upstream in frontend 1.57.1 ([ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)). This fork does not patch it.
+
+### ✅ Verified versions
+
+Prebuilt distributions usually show the **ComfyUI version (`0.XX`)**. The matching frontend package version is in `comfyui-frontend-package==` inside the ComfyUI root `requirements.txt`, or in the JS asset path of any browser console error.
+
+| ComfyUI | Frontend package | Result |
+|---|---|---|
+| 0.36 – 0.39 | 1.52.7 – 1.53.10 | ✅ Works |
+| 0.40 – 0.41 | 1.55.17 | ❌ Canvas freezes |
+| 0.42.5 | 1.55.18 | ❌ Canvas freezes |
+| master and later | 1.57.1 or newer | ✅ Fixed upstream |
+
+> Ranges combine tested points with the upstream issue record; individual patch versions inside a range were not verified one by one. If your version is not listed, check which range the frontend version in `requirements.txt` falls into.
 
 > This package is a published preview. Workflows and behavior may change before the first stable release. Legacy workflows are not migrated automatically; the Library can import the supported legacy prompt-library exports described below.
 
