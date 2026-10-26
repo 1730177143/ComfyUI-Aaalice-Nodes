@@ -11,11 +11,19 @@
 面向 ComfyUI 的紧凑参数控件和工作流工具。
 
 > [!NOTE]
-> **本仓库是 [Aaalice233/ComfyUI-Aaalice-Nodes](https://github.com/Aaalice233/ComfyUI-Aaalice-Nodes) 的社区分支。** 上游已停止更新，本分支只维护一件事：**兼容新版 ComfyUI 前端**，不新增节点、不改动工作流格式。
+> **本仓库是 [Aaalice233/ComfyUI-Aaalice-Nodes](https://github.com/Aaalice233/ComfyUI-Aaalice-Nodes) 的社区分支。** 上游已停止更新，本分支只修上游遗留的 bug，不新增节点、不改动工作流格式；节点 ID、输入输出与序列化格式与上游完全一致，旧工作流可直接打开。
 >
-> - 已修复：新版前端（≥ 1.55）绘制控件时抛出 `TypeError`，导致整张画布无法交互的问题。
-> - 节点 ID、输入输出与序列化格式与上游一致，旧工作流可直接打开。
-> - **不可与上游原版同时安装**：两者注册相同的节点 ID，请先卸载原版。
+> **不可与上游原版同时安装**：两者注册相同的节点 ID，请先卸载原版。
+
+## 🔧 相对上游的改动
+
+| 文件 | 改动 |
+|---|---|
+| `js/prompt_selector.js`、`js/resolution_preset.js` | 侧边栏参数卡片重新绑定时，`getValue` 对 ComfyUI 的响应式代理调用 `structuredClone`，抛 `DataCloneError: #<Object> could not be cloned`，失效卡片因此无法重绑。改为 JSON 深拷贝。 |
+| `pyproject.toml` | 发布者 ID 改为本分支的发布者，其余节点与协议未变。 |
+
+> [!IMPORTANT]
+> 本分支**不包含**针对 ComfyUI 前端 1.55.x / 1.56.x 的兼容补丁。在这些版本下，绘制被提升到子图宿主卡上的 `IMAGEUPLOAD` 控件会抛 `TypeError` 并冻结画布——这是官方回归，已在 frontend 1.57.1 修复（[ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)）。请升级前端，或使用 1.53.x / 1.54.x 与 1.57.1 及以上。
 
 > 当前为已发布的预览版。首次稳定发布前，工作流格式和节点行为仍可能调整。旧版工作流不会自动迁移；词库管理可以导入下文列出的受支持旧版词库导出文件。
 

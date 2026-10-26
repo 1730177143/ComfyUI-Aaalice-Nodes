@@ -11,11 +11,19 @@
 Compact parameter controls and workflow utilities for ComfyUI.
 
 > [!NOTE]
-> **This repository is a community fork of [Aaalice233/ComfyUI-Aaalice-Nodes](https://github.com/Aaalice233/ComfyUI-Aaalice-Nodes).** Upstream is no longer maintained; this fork maintains one thing only: **compatibility with newer ComfyUI frontends**. No new nodes, no changes to the workflow format.
+> **This repository is a community fork of [Aaalice233/ComfyUI-Aaalice-Nodes](https://github.com/Aaalice233/ComfyUI-Aaalice-Nodes).** Upstream is no longer maintained; this fork only fixes bugs left in upstream code — no new nodes, no changes to the workflow format. Node IDs, inputs/outputs, and serialization are identical to upstream, so existing workflows open as-is.
 >
-> - Fixed: a `TypeError` thrown while drawing widgets on frontend ≥ 1.55, which left the whole canvas unresponsive.
-> - Node IDs, inputs/outputs, and serialization are identical to upstream; existing workflows open as-is.
-> - **Do not install alongside the upstream package**: both register the same node IDs. Uninstall the original first.
+> **Do not install alongside the upstream package**: both register the same node IDs. Uninstall the original first.
+
+## 🔧 Changes from upstream
+
+| File | Change |
+|---|---|
+| `js/prompt_selector.js`, `js/resolution_preset.js` | Re-binding a sidebar parameter card called `structuredClone` on a ComfyUI reactive proxy and threw `DataCloneError: #<Object> could not be cloned`, leaving stale cards impossible to re-bind. Switched to a JSON deep copy. |
+| `pyproject.toml` | Publisher ID now belongs to this fork; nodes and protocols are unchanged. |
+
+> [!IMPORTANT]
+> This fork does **not** ship a compatibility patch for ComfyUI frontend 1.55.x / 1.56.x. On those versions, drawing an `IMAGEUPLOAD` widget promoted onto a subgraph host card throws a `TypeError` and freezes the canvas. That is an upstream regression, fixed in frontend 1.57.1 ([ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)). Upgrade the frontend, or stay on 1.53.x / 1.54.x and 1.57.1 or newer.
 
 > This package is a published preview. Workflows and behavior may change before the first stable release. Legacy workflows are not migrated automatically; the Library can import the supported legacy prompt-library exports described below.
 
