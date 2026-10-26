@@ -10,6 +10,13 @@
 
 Compact parameter controls and workflow utilities for ComfyUI.
 
+> [!NOTE]
+> **This repository is a community fork of [Aaalice233/ComfyUI-Aaalice-Nodes](https://github.com/Aaalice233/ComfyUI-Aaalice-Nodes).** Upstream is no longer maintained; this fork maintains one thing only: **compatibility with newer ComfyUI frontends**. No new nodes, no changes to the workflow format.
+>
+> - Fixed: a `TypeError` thrown while drawing widgets on frontend ≥ 1.55, which left the whole canvas unresponsive.
+> - Node IDs, inputs/outputs, and serialization are identical to upstream; existing workflows open as-is.
+> - **Do not install alongside the upstream package**: both register the same node IDs. Uninstall the original first.
+
 > This package is a published preview. Workflows and behavior may change before the first stable release. Legacy workflows are not migrated automatically; the Library can import the supported legacy prompt-library exports described below.
 
 > [!WARNING]

@@ -412,7 +412,7 @@ function setupNode(node, { initializeSize = false } = {}) {
 	node._aaResolutionMounted = true; stateFor(node);
 	node._aaaliceResolutionSidebarViews ||= new Set();
 	node._aaaliceResolutionControl = {
-		getValue: () => structuredClone(stateFor(node)),
+		getValue: () => JSON.parse(JSON.stringify(stateFor(node))),
 		getPresets: () => allPresets(personalPresets),
 		getAlignments: () => ALIGNMENTS,
 		getCanvasLimits: () => CANVAS_LIMITS,

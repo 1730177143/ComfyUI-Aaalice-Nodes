@@ -493,7 +493,7 @@ function setup(node, loaded = false) {
 	node._aaalicePromptSelectorMounted = true; stateFor(node);
 	node._aaalicePromptSelectorSidebarViews ||= new Set();
 	node._aaalicePromptSelectorControl = {
-		getValue: () => structuredClone(stateFor(node)),
+		getValue: () => JSON.parse(JSON.stringify(stateFor(node))),
 		setValue: (next) => { node.properties[PROPERTY] = normalizePromptSelectorState(next); render(node); notifySidebarViews(node); },
 		validatePresetValue: (entry) => {
 			const value = entry?.payload;
