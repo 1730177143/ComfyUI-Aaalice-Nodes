@@ -20,7 +20,10 @@ Compact parameter controls and workflow utilities for ComfyUI.
 | File | Change |
 |---|---|
 | `js/prompt_selector.js`, `js/resolution_preset.js` | Re-binding a sidebar parameter card called `structuredClone` on a ComfyUI reactive proxy and threw `DataCloneError: #<Object> could not be cloned`, leaving stale cards impossible to re-bind. Switched to a JSON deep copy. |
+| `js/resolution_preset.js` | The ResolutionPreset drag handles did nothing: `beginDrag` called `structuredClone` before establishing the drag state, so the exception aborted the handler and `_aaResolutionDrag` was never set. Switched to a JSON deep copy as well. |
 | `pyproject.toml` | Publisher ID now belongs to this fork; nodes and protocols are unchanged. |
+
+> Both `structuredClone` fixes address a problem that only appears once ComfyUI frontend 1.57+ turns `node.properties` into a reactive proxy — a Proxy cannot be cloned by `structuredClone`. Older frontend versions were never affected, which is why these two spots stayed dormant.
 
 > [!IMPORTANT]
 > **The canvas freeze is not something this fork can fix — it is an upstream frontend regression.** On frontend 1.55.x / 1.56.x, drawing an `IMAGEUPLOAD` widget that a subgraph host has promoted onto its card (the core `Load Image` "choose file to upload" button) throws `TypeError: Cannot set property options of #<Object> which has only a getter`. The frame aborts, the canvas never repaints again, and it presents as "the image is frozen but the minimap still moves". The root cause is the official `ButtonWidget` constructor writing `options` onto a read-only widget projection; no third-party node is involved. Fixed upstream in frontend 1.57.1 ([ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)). This fork does not patch it.

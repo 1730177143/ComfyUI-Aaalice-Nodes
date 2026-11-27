@@ -20,7 +20,10 @@
 | 文件 | 改动 |
 |---|---|
 | `js/prompt_selector.js`、`js/resolution_preset.js` | 侧边栏参数卡片重新绑定时，`getValue` 对 ComfyUI 的响应式代理调用 `structuredClone`，抛 `DataCloneError: #<Object> could not be cloned`，失效卡片因此无法重绑。改为 JSON 深拷贝。 |
+| `js/resolution_preset.js` | 分辨率节点的拖拽手柄失效：`beginDrag` 在建立拖拽状态之前调用 `structuredClone`，异常中断后 `_aaResolutionDrag` 从未赋值，按下手柄毫无反应。同样改为 JSON 深拷贝。 |
 | `pyproject.toml` | 发布者 ID 改为本分支的发布者，其余节点与协议未变。 |
+
+> 上面两处 `structuredClone` 修复针对的是 ComfyUI 前端 1.57 起把 `node.properties` 改为响应式代理（Proxy）后才会触发的问题——代理对象无法被 `structuredClone` 克隆。更早的前端版本不受影响，所以这两处在旧版上从未暴露。
 
 > [!IMPORTANT]
 > **画布冻结不是本分支能修的问题，它源于官方前端回归。** 在 frontend 1.55.x / 1.56.x 下，只要画布绘制到「被子图宿主提升的 `IMAGEUPLOAD` 控件」（核心 `Load Image` 的「选择文件上传」按钮），就会抛出 `TypeError: Cannot set property options of #<Object> which has only a getter`，整帧渲染中断，画布从此不再重绘——表现是「画面定格、小地图还能拖」。根因在官方 `ButtonWidget` 构造函数向只读的控件投影写入 `options`，与任何第三方节点无关，官方已在 frontend 1.57.1 修复（[ComfyUI_frontend#21160](https://github.com/Comfy-Org/ComfyUI_frontend/issues/21160)）。本分支不对此打补丁。
