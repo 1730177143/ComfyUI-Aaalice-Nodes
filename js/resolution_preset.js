@@ -234,7 +234,7 @@ function openManageDialog(node) {
 
 function beginDrag(node, mode, event) {
 	if (event.button !== 0 || node._aaResolutionDrag) return;
-	const stage = node._aaResolutionStage; const rect = stage.getBoundingClientRect(); const snapshot = structuredClone(stateFor(node));
+	const stage = node._aaResolutionStage; const rect = stage.getBoundingClientRect(); const snapshot = JSON.parse(JSON.stringify(stateFor(node)));
 	node.graph?.beforeChange?.();
 	const drag = { mode, pointerId: event.pointerId, snapshot, rect, target: event.currentTarget };
 	node._aaResolutionDrag = drag; drag.target.setPointerCapture?.(event.pointerId); node._aaResolutionRoot.classList.add("is-dragging");
